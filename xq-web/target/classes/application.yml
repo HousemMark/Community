@@ -1,0 +1,17 @@
+server:
+  port: 6091
+  servlet:    context-path: /
+ 
+#dubbo
+dubbo:
+  scan:
+    basePackages: com.xq
+  application:
+    name: consumer-web
+  registry:
+    address: zookeeper://192.168.198.128:2181?backup=192.168.198.128:2182,192.168.198.128:2183
+  
+#引入logger日志
+logging:
+  level:
+    com.xq: info

@@ -1,0 +1,39 @@
+server:
+  port: 6092
+  servlet:    context-path: /
+
+#定义DataSource
+spring:
+  datasource:
+    #引入druid数据源
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/xq?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true
+    username: root
+    password: root
+    
+#整合mybatis-plus
+mybatis-plus:
+   #Mapper返回类的包名
+   type-aliases-package: com.xq.pojo
+   #引入映射文件 
+   mapper-locations: classpath:/mappers/*.xml
+   #开启驼峰映射
+   configuration:
+    map-underscore-to-camel-case: true
+       
+dubbo:
+  scan:
+    basePackages: com.xq
+  application:
+    name: provider-web
+  registry:
+    address: zookeeper://192.168.198.128:2181?backup=192.168.198.128:2182,192.168.198.128:2183
+  protocol:
+    name: dubbo
+    port: 20880
+    
+#引入logger日志
+logging:
+  level:
+    com.xq: info

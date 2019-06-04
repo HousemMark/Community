@@ -1,0 +1,249 @@
+<div class="row">
+	<div class="col-xs-12">
+		<div class="box">
+			<div class="box-header">
+				<h3 class="box-title">缴费查询</h3>
+
+				<div class="box-tools">
+					<div class="input-group input-group-sm" style="width: 350px;">
+						<input type="text" name="table_search" id="searchNameId"
+							class="form-control pull-right" placeholder="月份">
+
+						<div class="input-group-btn">
+							<button type="button" class="btn btn-default btn-search">
+								<i class="fa fa-search"></i>
+							</button>
+							<button type="button" class="btn btn-default btn-add">添加</button>
+							<button type="button" class="btn btn-default btn-delete">删除</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /.box-header -->
+			<div class="box-body table-responsive no-padding">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>费用类型</th>
+							<th>楼号</th>
+							<th>层数</th>
+							<th>房号</th>
+							<th>总费用</th>
+							<th>费用状态</th>
+							<th>创建时间</th>
+							<th>缴费时间</th>
+						</tr>
+					</thead>
+					<tbody id="tbodyId"></tbody>
+				</table>
+			</div>
+			<div id="pageId" class="box-footer clearfix"></div>
+			<!-- /.box-body -->
+		</div>
+		<!-- /.box -->
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(
+			function() {
+				$("#pageId").load("doPageUI.do", function() {
+					doGetObjects();
+				});
+				$(".input-group-btn")
+						.on("click", ".btn-search", doQueryObjects).on("click",
+								".btn-add,.btn-delete", doLoadEditUI);
+				$("tbody").on("click", ".btn-valid", doValidById);
+			});
+
+	function doLoadEditUI() {
+		//1.判定点击的对象
+		var title;
+		if ($(this).hasClass("btn-add")) {
+			title = "添加账单";
+			doLoadPage(title);
+		} else if ($(this).hasClass("btn-delete")) {
+			title = "删除账单";
+			var id = doGetCheckedId();
+			if (!id) {
+				alert("请先选择");
+				return;
+			}
+			//基于id进行查询并加载编辑页面
+			doDeleteObjectById(id, title);
+		}
+	}
+	function doDeleteObjectById(id, title) {
+		/* $.ajax({url:"demo_test.txt",data:{id:id},success:function(result){
+		    	   console.log(result);
+		    	   $("#mainContentId").data("rowData", result.object);
+					doLoadPage(title);
+		        },
+		       error: function(){
+		    	   alert(888);
+		       }
+		}); */
+		//1.params
+		var params = {
+			"id" : id
+		};
+		//2.url
+		var url = "fee/doDeleteObjectById.do";
+		//3.ajax request
+		console.log("id=" + id)
+		$.getJSON(url, params, function(result) {//JsonResult
+			if (result.status == 1) {
+				alert(result.message);
+				doGetObjects();
+				/* console.log(result.data);
+				console.log(111);
+				$("#mainContentId").data("rowData", result.data);
+				doLoadPage(title); */
+			} else {
+				alert(result.message);
+			}
+		});
+	}
+
+	function doGetCheckedId() {
+		return $("tbody input[name='radioId']:checked").val();
+	}
+	function doLoadPage(title) {
+		var url = "fee/doFeeEditUI.do"
+		$("#mainContentId").load(url, function() {
+			$(".box-title").html(title);
+		})
+	}
+	//禁用和启用操作
+	function doValidById() {
+		//params
+		var rowData = $(this).parents("tr").data("rowData");
+		var id = rowData.id;
+		var newValid = rowData.valid ? 0 : 1;
+		var params = {
+			"id" : rowData.id,
+			"valid" : newValid
+		};
+		//url
+		var url = "fee/doValidById.do";
+		//ajax request
+		var btn = $(this);//获取点击的button对象
+		$.post(url, params, function(result) {
+			if (result.state == 1) {
+				alert(result.message);
+				//doGetObjects();//重新查询刷新
+				//优化方式实现(局部刷新:修改button显示,修改td内容显示)
+				doEditRow(btn, rowData.valid);
+			} else {
+				alert(result.message);
+			}
+		})
+	}
+	function doEditRow(obj, valid) {
+		//1.修改按钮上的内容
+		$(obj).html(valid ? "启用" : "禁用");
+		//2.修改tr中第5个td中的内容(查询API文档)
+		var tr = $(obj).parents("tr");
+		tr.find("td:eq(5)").text(valid ? "禁用" : "启用");
+		//3.获取当前行tr对象，然后重新绑定新的值
+		var rowData = tr.data("rowData")
+		rowData.valid = valid ? 0 : 1;
+		tr.data("rowData", rowData);
+	}
+	//处理查询按钮事件
+	function doQueryObjects() {
+		$("#pageId").data("pageCurrent", 1);
+		doGetObjects();
+	}
+	//页面加载完成异步加载当前页数据
+	function doGetObjects() {
+		var url = "fee/doFindObjectsByTime.do";
+		var pageCurrent = $("#pageId").data("pageCurrent");
+		if (!pageCurrent)
+			pageCurrent = 1;
+		var params = {
+			"pageCurrent" : pageCurrent
+		}
+		console.log(111);
+		params.time = $("#searchNameId").val().trim();
+		console.log(params);
+		$.getJSON(url, params, function(result) {
+			console.log(result);
+			doHandleResponseResult(result);
+		}); 
+	}
+	function doHandleResponseResult(result) {
+		if (result.status == 1) {
+			doSetTableBodyRows(result.data.records);
+			doSetPagination(result.data);
+		} else {
+			alert(result.message);
+		}
+	}
+	//通过服务端返回的数据初始化页面
+	function doSetTableBodyRows(data) {
+		//1.获取tbody对象，并清空内容
+		var tBody = $("#tbodyId");
+		tBody.empty();
+		//2.迭代data内容将数据追加到tbody中
+		for ( var i in data) {
+			var tr = $("<tr></tr>");
+			tr.data("rowData", data[i]);
+			var tds = doCreateTds(data[i]);
+			tr.append(tds);
+			tBody.append(tr);
+		}
+	}
+	function doCreateTds(row) {
+		/* createdTime: null
+		createdUser: null
+		email: "dwq"
+		id: 19
+		idCard: "3"
+		password: "24a924358f321fb34d5dfc7d8889bff5"
+		roomId: null
+		salt: "c9519bdd-2066-4196-bf75-08752b655f5b"
+		updatedTime: null
+		updatedUser: null
+		username: "dasd"
+		console.log(row); */
+		var tds = "<td><input type='radio' name='radioId' value='"+row.id+"' ></td>"
+				+ "<td>"
+				+ row.type
+				+ "</td>"
+				+ "<td>"
+				+ row.room.building
+				+ "</td>"
+				+ "<td>"
+				+ row.room.floor
+				+ "</td>"
+				+ "<td>"
+				+ row.room.room
+				+ "</td>"
+				+ "<td>"
+				+ row.sum
+				+ "</td>"
+				+ "<td>"
+				+ row.status
+				+ "</td>"
+				+ "<td>"
+				+ new Date(row.createdTime).toLocaleString()
+				+ "</td>"
+				+ "<td>"
+				+ update(row.updatedTime)
+				+ "</td>"
+		return tds;
+	}
+	
+	function update(date){
+		if(date==null){
+			return "null";
+		}else{
+			return new Date(date).toLocaleString();
+		}
+	}
+</script>
+
+
+
+
