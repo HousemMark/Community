@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: xq-pwd
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: Administrator
+Implementation-Vendor-Id: com.xq
+Build-Jdk: 1.8.0_101
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/xq/xq-pwd
+Created-By: Maven Integration for Eclipse
+

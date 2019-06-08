@@ -46,7 +46,7 @@
 <script type="text/javascript">
 	$(document).ready(
 			function() {
-				$("#pageId").load("manager/doPageUI.do", function() {
+				$("#pageId").load("user/doPageUI.do", function() {
 					doGetObjects();
 				});
 				$(".input-group-btn")
@@ -80,7 +80,7 @@
 			"id" : id
 		};
 		//2.url
-		var url = "manager/doFindObjectById.do";
+		var url = "user/doFindObjectById.do";
 		//3.ajax request
 		console.log(111);
 		$.getJSON(url, params, function(result) {//JsonResult
@@ -99,7 +99,7 @@
 		return $("tbody input[name='radioId']:checked").val();
 	}
 	function doLoadPage(title) {
-		var url = "manager/doEditUI.do"
+		var url = "user/doEditUI.do"
 		$("#mainContentId").load(url, function() {
 			$(".box-title").html(title);
 		})
@@ -115,7 +115,7 @@
 			"valid" : newValid
 		};
 		//url
-		var url = "manager/doValidById.do";
+		var url = "user/doValidById.do";
 		//ajax request
 		var btn = $(this);//获取点击的button对象
 		$.post(url, params, function(result) {
@@ -147,7 +147,7 @@
 	}
 	//页面加载完成异步加载当前页数据
 	function doGetObjects() {
-		var url = "manager/doFindPageObjects.do";
+		var url = "user/doFindManagerPageObjects.do";
 		var pageCurrent = $("#pageId").data("pageCurrent");
 		if (!pageCurrent)
 			pageCurrent = 1;

@@ -51,7 +51,7 @@ public class MvcConfigurer implements WebMvcConfigurer{
 	//添加自定义拦截器
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(userInterceptor).addPathPatterns("/fee/**");
+		registry.addInterceptor(userInterceptor).addPathPatterns("/fee/**","/pwd/**");
 	}
 }
 
