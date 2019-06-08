@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xq.mapper.FeeMapper">
+
+  <resultMap type="com.xq.vo.WebFee" id="manageFee">
+  	<association property="room" column="room_id" 
+  	select="com.xq.mapper.RoomMapper.findById">
+  	</association>
+  </resultMap>
+  
+  <select id="findAllObjects" resultMap="manageFee">
+  	select id,type,sum,room_id, 
+  	status,created_time,updated_time 
+  	from xq_manage_fee
+  	<if test="time != null and time != ''">
+  		<where>created_time like concat("%",#{time},"%")</where>
+  	</if>
+  	limit #{startIndex},#{pageSize}
+  </select>
+  
+  <select id="findObjects" resultType="BaseFee">
+  	select id,type,sum,room_id, 
+  	status,created_time 
+  	from xq_manage_fee
+  	where room_id = #{roomId}
+  	<if test="time != null and time != ''">
+  		,created_time like concat("%",#{time},"%")
+  	</if>
+  	limit #{startIndex},#{pageSize}
+  </select>
+  
+  <select id="getRowCounts" resultType="Integer">
+  	select count(*) 
+  	from xq_manage_fee
+  	<if test="time != null and time != ''">
+  		<where>created_time like concat("%",#{time},"%")</where>
+  	</if>
+  </select>
+</mapper>
