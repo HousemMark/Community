@@ -249,12 +249,12 @@ desired effect
 					<!-- Optionally, you can add icons to the links -->
 					<li class="active"><a id="load-fix-id"><i
 							class="fa fa-link"></i> <span>报修管理</span></a></li>
-					<li class="active"><a id="load-fix-id"><i
+					<li class="active"><a id="load-fee-id"><i
 							class="fa fa-link"></i> <span>自助缴费</span></a></li>
 					<li class="active"><a id="load-pwd-id"><i
 							class="fa fa-link"></i> <span>修改密码</span></a></li>
-					<li class="active"><a id="load-ali-id"><i
-							class="fa fa-link"></i> <span>支付测试</span></a></li>
+					<!-- <li class="active"><a id="load-ali-id"><i
+							class="fa fa-link"></i> <span>支付测试</span></a></li> -->
 				</ul>
 			</section>
 
@@ -397,9 +397,9 @@ desired effect
 	<script src="dist/js/adminlte.min.js"></script>
 	<script type="text/javascript">
 		$(function() {
-			doLoadUI("load-fix-id", "guest/index/fixingList.do");
-			doLoadUI("load-fee-id", "guest/index/feeList.do");
-			doLoadUI("load-pwd-id", "guest/index/pwdList.do");
+			doLoadUI("load-fix-id", "guest/index/fix_list.do");
+			doLoadUI("load-fee-id", "guest/index/fee_list.do");
+			doLoadUI("load-pwd-id", "guest/index/pwd_edit.do");
 			doJumpUI("load-ali-id", "guest/index/AutoPayList.do");
 
 			//信息模块提示

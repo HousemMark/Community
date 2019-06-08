@@ -1,7 +1,7 @@
 server:
   port: 6091
   servlet:    context-path: /
- 
+
 #dubbo
 dubbo:
   scan:

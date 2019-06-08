@@ -11,7 +11,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.xq.pojo.Guest;
 import com.xq.pojo.Manager;
-import com.xq.pojo.User;
 import com.xq.utils.GuestThreadLocal;
 import com.xq.utils.ManagerThreadLocal;
 import com.xq.utils.ObjectMapperUtil;

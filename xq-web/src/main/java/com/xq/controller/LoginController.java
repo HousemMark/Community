@@ -3,6 +3,7 @@ package com.xq.controller;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,8 +18,11 @@ public class LoginController {
 	private LoginService loginService;
 	
 	@RequestMapping("doLogin")
-	public WebResult login(User user,HttpServletResponse response) {
+	public WebResult login(boolean isRememberMe,User user,HttpServletResponse response) {
 		try {
+			UsernamePasswordToken upToken = new UsernamePasswordToken();
+			if(isRememberMe)
+				upToken.setRememberMe(isRememberMe);
 			String role = loginService.confirmUser(user);
 			//单点登陆操作
 			String token = loginService.getToken();
