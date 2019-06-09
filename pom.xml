@@ -165,5 +165,6 @@
 		<module>xq-fee</module>
 		<module>xq-sso</module>
 		<module>xq-pwd</module>
+		<module>xq-user</module>
 	</modules>
 </project>

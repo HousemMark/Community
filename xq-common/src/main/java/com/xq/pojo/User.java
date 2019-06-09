@@ -11,6 +11,7 @@ public class User extends BasePojo{
 	private String username;
 	private String password;
 	private String salt;
+	private String mobile;
 	private String email;
 	private String idCard;
 	private String createdUser;

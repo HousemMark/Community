@@ -26,7 +26,7 @@
 						<tr>
 							<th>ID</th>
 							<th>用户名</th>
-							<th>角色</th>
+							<th>小区</th>
 							<th>楼栋号</th>
 							<th>房号</th>
 							<th>邮箱</th>
@@ -88,7 +88,7 @@
 			"id" : id
 		};
 		//2.url
-		var url = "user/doFindObjectByGId.do";
+		var url = "guest/doFindObjectById.do";
 		//3.ajax request
 		console.log("id=" + id)
 		$.getJSON(url, params, function(result) {//JsonResult
@@ -107,7 +107,7 @@
 		return $("tbody input[name='radioId']:checked").val();
 	}
 	function doLoadPage(title) {
-		var url = "user/doGuestEditUI.do"
+		var url = "guest/doEditUI.do"
 		$("#mainContentId").load(url, function() {
 			$(".box-title").html(title);
 		})
@@ -155,7 +155,7 @@
 	}
 	//页面加载完成异步加载当前页数据
 	function doGetObjects() {
-		var url = "user/doFindGuestPageObjects.do";
+		var url = "guest/doFindPageObjects.do";
 		var pageCurrent = $("#pageId").data("pageCurrent");
 		if (!pageCurrent)
 			pageCurrent = 1;
@@ -171,9 +171,9 @@
 		}); 
 	}
 	function doHandleResponseResult(result) {
-		if (result.state == 1) {
-			doSetTableBodyRows(result.object.records);
-			doSetPagination(result.object);
+		if (result.status == 1) {
+			doSetTableBodyRows(result.data.records);
+			doSetPagination(result.data);
 		} else {
 			alert(result.message);
 		}
@@ -199,13 +199,13 @@
 				+ row.username
 				+ "</td>"
 				+ "<td>"
-				+ row.xqRole.name
+				+ row.room.name
 				+ "</td>"
 				+ "<td>"
-				+ row.xqRoom.building
+				+ row.room.building
 				+ "</td>"
 				+ "<td>"
-				+ row.xqRoom.room
+				+ row.room.room
 				+ "</td>"
 				+ "<td>"
 				+ row.email
@@ -217,7 +217,7 @@
 				+ new Date(row.createdTime).toLocaleString()
 				+ "</td>"
 				+ "<td>"
-				+ new Date(row.modifiedTime).toLocaleString()
+				+ new Date(row.updatedTime).toLocaleString()
 		return tds;
 	}
 </script>

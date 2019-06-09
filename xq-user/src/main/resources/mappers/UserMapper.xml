@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xq.mapper.UserMapper">
+	<!-- 提取共用代码块 -->
+	<sql id="selection">
+		<if test="username != null and username != ''">
+			<where>username like concat("%",#{username},"%")</where>
+		</if>
+	</sql>
+
+	<resultMap type="com.xq.vo.GuestRoom" id="guestRoom">
+		<association property="room" column="room_id"
+			select="com.xq.mapper.RoomMapper.findById">
+		</association>
+	</resultMap>
+
+	<select id="findGuests" resultMap="guestRoom">
+		select * from xq_guest
+		<include refid="selection"></include>
+		limit #{startIndex},#{pageSize}
+	</select>
+
+	<select id="getGuestRowCounts" resultType="Integer">
+		select count(*)
+		from xq_guest
+		<include refid="selection"></include>
+	</select>
+
+	<resultMap type="com.xq.vo.ManagerJob" id="managerJob">
+		<association property="job" column="job_id"
+			select="com.xq.mapper.JobMapper.findById">
+		</association>
+	</resultMap>
+
+	<select id="findManagers" resultMap="managerJob">
+		select * from xq_manager
+		<include refid="selection"></include>
+		limit #{startIndex},#{pageSize}
+	</select>
+
+	<select id="getManagerRowCounts" resultType="Integer">
+		select count(*)
+		from xq_manager
+		<include refid="selection"></include>
+	</select>
+</mapper>
